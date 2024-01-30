@@ -47,8 +47,8 @@ title_list = load_movie_titles('resources/data/movies.csv')
 
 
 # Background settings
-Logo = Image.open('resources/imgs/logo.png')
-st.set_page_config(page_title='LunaPix', page_icon=Logo)
+logo = Image.open('resources/imgs/Logo.jpg')
+st.set_page_config(page_title='LunaPix', page_icon=logo)
 
 @st.cache_data
 def get_img_as_base64(image_path):
@@ -56,8 +56,8 @@ def get_img_as_base64(image_path):
         image_data = image_file.read()
     return base64.b64encode(image_data).decode()
 
-image = get_img_as_base64('resources/imgs/background.png')
-image1 = get_img_as_base64('resources/imgs/Logo.png')
+image = get_img_as_base64('resources/imgs/background.jpg')
+image1 = get_img_as_base64('resources/imgs/Logo.jpg')
 
 
 background_image = f"""
@@ -194,10 +194,19 @@ def main():
 
         selected = option_menu(
             menu_title = None,
-            options = ["Team", "About the App"],
-            icons = ["person", "app_indicator"], #https://icons.getbootstrap.com/
+            options = ["Star-Arc Labz", "Team", "About the App"],
+            icons = ["company", "person", "app_indicator"], #https://icons.getbootstrap.com/
             orientation = "horizontal"
         )
+
+
+        if selected == "Star-Arc Labz":
+            st.subheader("Star-Arc Labz")
+            st.markdown(open('resources/pages/Who_we_are.md').read())
+            st.markdown(open('resources/pages/Mission_statement.md').read())
+            st.markdown(open('resources/pages/Vision.md').read())
+            st.markdown(open('resources/pages/LunaPix_vision.md').read())
+
 
 
         if selected == "Team":
@@ -215,13 +224,13 @@ def main():
             def about_us():
                 st.title("About Us")
 
-            path_to_images_folder = ("reourses/imgs")
+            path_to_images_folder = ("resourses/imgs")
 
             the_team = [
                 {'image_file': 'Bonani.jpg', 'name': 'Bonani Mkhari', 'contact_info': 'bonanimkhari@gmail.com', 'role': 'Team Lead'},
                 {'image_file': 'Mulalo.jpg', 'name': 'Mulalo Manthanda', 'contact_info': 'manthadamulalo@gmail.com', 'role': 'Project Manager'},
-                {'image_file': 'Lucpah.jpg', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilpi@gmail.com', 'role': 'Software Developer'},
-                {'image_file': 'Lesego.jpg', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
+                {'image_file': 'Lucie.jpg', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilpi@gmail.com', 'role': 'Software Developer'},
+                {'image_file': 'Lesego.png', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
                 {'image_file': 'Prince.jpg', 'name': 'Prince Kala', 'contact_info': 'kala33prince@gmail.com', 'role': 'Machine Learning Engineer'},
                 {'image_file': 'Mpho.jpg', 'name': 'Mpho Sesinyi', 'contact_info': 'mphoses@hotmail.com', 'role': 'Data Engineer'},
             ]
