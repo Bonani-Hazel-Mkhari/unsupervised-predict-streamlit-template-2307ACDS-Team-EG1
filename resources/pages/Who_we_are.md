@@ -1,0 +1,3 @@
+**Who We Are**
+
+Star-Arc Labz is a trailblazing technology company at the forefront of revolutionising entertainment experiences. We specialise in creating cutting-edge solutions that seamlessly blend advanced data science, artificial intelligence, and emotional intelligence to redefine how individuals interact with cinematic content. Our flagship product, LunaPix, exemplifies our commitment to providing personalised, immersive, and emotionally resonant entertainment recommendations. As a team of visionaries, technologists, and storytellers, we strive to empower users to discover the joy of storytelling in ways never imagined before. Star-Arc Labz is not just a company; it's a creative force shaping the future of human-centric technology and entertainment discovery.
