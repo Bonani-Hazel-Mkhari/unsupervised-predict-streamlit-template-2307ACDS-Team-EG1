@@ -216,12 +216,12 @@ def main():
             path_to_images_folder = ("resources/imgs/")
 
             the_team = [
-                {'image_file': 'Bonani.JPG', 'name': 'Bonani Mkhari', 'contact_info': 'bonanimkhari@gmail.com', 'role': 'Team Lead'},
-                {'image_file': 'Mulalo.JPG', 'name': 'Mulalo Manthanda', 'contact_info': 'manthadamulalo@gmail.com', 'role': 'Project Manager'},
-                {'image_file': 'Lucie.JPG', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilp@gmail.com', 'role': 'Software Developer'},
-                {'image_file': 'Lesego.PNG', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
-                {'image_file': 'Prince.JPG', 'name': 'Prince Kala', 'contact_info': 'kala33prince@gmail.com', 'role': 'Machine Learning Engineer'},
-                {'image_file': 'Mpho.JPG', 'name': 'Mpho Sesinyi', 'contact_info': 'mphoses@hotmail.com', 'role': 'Data Engineer'},
+                {'image_file': 'Bonani.jpg', 'name': 'Bonani Mkhari', 'contact_info': 'bonanimkhari@gmail.com', 'role': 'Team Lead'},
+                {'image_file': 'Mulalo.jpg', 'name': 'Mulalo Manthanda', 'contact_info': 'manthadamulalo@gmail.com', 'role': 'Project Manager'},
+                {'image_file': 'Lucie.jpg', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilp@gmail.com', 'role': 'Software Developer'},
+                {'image_file': 'Lesego.png', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
+                {'image_file': 'Prince.jpg', 'name': 'Prince Kala', 'contact_info': 'kala33prince@gmail.com', 'role': 'Machine Learning Engineer'},
+                {'image_file': 'Mpho.jpg', 'name': 'Mpho Sesinyi', 'contact_info': 'mphoses@hotmail.com', 'role': 'Data Engineer'},
             ]
 
             for member in the_team:
