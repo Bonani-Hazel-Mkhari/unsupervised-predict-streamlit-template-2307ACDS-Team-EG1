@@ -48,51 +48,32 @@ title_list = load_movie_titles('resources/data/movies.csv')
 
 # Background settings
 logo = Image.open('resources/imgs/Logo.jpg')
-st.set_page_config(page_title='LunaPix', page_icon=logo)
 
-@st.cache_data
+# Function to get image as base64
 def get_img_as_base64(image_path):
     with open(image_path, "rb") as image_file:
         image_data = image_file.read()
     return base64.b64encode(image_data).decode()
 
-image = get_img_as_base64('resources/imgs/background.jpg')
-image1 = get_img_as_base64('resources/imgs/Logo.jpg')
+# Load your image
+header_image_path = 'resources/imgs/logo1.jpg'
+header_image = Image.open(header_image_path)
 
+# Convert the image to base64
+header_image_base64 = get_img_as_base64(header_image_path)
 
-background_image = f"""
-<style>
-[data-testid="stAppViewContainer"] > .main {{
-background-image: url("data:image/png;base64,{image}");
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-background-attachment: scroll;
-color: black;
-display : flex;
-justify-content: centre;
-align-items: centre;
-}}
+# Set Streamlit page configuration
+st.set_page_config(
+    page_title='LunaPix',
+    page_icon=header_image,
+    layout='wide'
+)
 
-[data-testid="stSidebar"] {{
-background-image: url("data:image/png;base64,{image1}");
-background-size: fit;
-background-position: center;
-background-repeat: no-repeat;
-}}
-</style>"""
-st.markdown(background_image, unsafe_allow_html=True)
+# Display the header image
+st.image(header_image, width=1000)
 
-
-#made with streamlit info
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: show;}
-            footer {visibility: hidden;}
-            
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
+# Rest of your Streamlit app content goes here
+st.title('Welcome to LunaPix: Your Reliable Movie Companion')
 
 # -------------------------------------------------------------------
 
@@ -184,31 +165,39 @@ def main():
     # -------------------------------------------------------------------
 
     # ------------- SAFE FOR ALTERING/EXTENSION -------------------
+    
+     # Build the Solution Overview Page
+                    
     if page_selection == "Solution Overview":
         st.title("Solution Overview")
-        st.write("Describe your winning approach on this page")
+        st.write("What makes LunaPix unique")
+        st.subheader("LunaPix")
+        st.markdown(open('resources/pages/About_LunaPix.md').read())
+        st.markdown(open('resources/pages/LunaPix_key_features.md').read())
+        st.markdown(open('resources/pages/Why_LunaPix.md').read())
+        st.markdown(open('resources/pages/LunaPix_vision.md').read())
 
 
+    # Build the About Us Page 
     if page_selection == "About Us":
         st.title("Abous Us")
 
+
         selected = option_menu(
             menu_title = None,
-            options = ["Star-Arc Labz", "Team", "About the App"],
-            icons = ["company", "person", "app_indicator"], #https://icons.getbootstrap.com/
+            options = ["Star-Arc Labz", "Team"],
+            icons = ["company", "person"], #https://icons.getbootstrap.com/
             orientation = "horizontal"
         )
-
 
         if selected == "Star-Arc Labz":
             st.subheader("Star-Arc Labz")
             st.markdown(open('resources/pages/Who_we_are.md').read())
             st.markdown(open('resources/pages/Mission_statement.md').read())
             st.markdown(open('resources/pages/Vision.md').read())
-            st.markdown(open('resources/pages/LunaPix_vision.md').read())
+            
 
-
-
+        # Build the Team page
         if selected == "Team":
             st.subheader("Meet Our Team")
 
@@ -222,17 +211,17 @@ def main():
                 st.write("---")
 
             def about_us():
-                st.title("About Us")
+                st.title("Our Team")
 
-            path_to_images_folder = ("resourses/imgs")
+            path_to_images_folder = ("resources/imgs/")
 
             the_team = [
-                {'image_file': 'Bonani.jpg', 'name': 'Bonani Mkhari', 'contact_info': 'bonanimkhari@gmail.com', 'role': 'Team Lead'},
-                {'image_file': 'Mulalo.jpg', 'name': 'Mulalo Manthanda', 'contact_info': 'manthadamulalo@gmail.com', 'role': 'Project Manager'},
-                {'image_file': 'Lucie.jpg', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilpi@gmail.com', 'role': 'Software Developer'},
-                {'image_file': 'Lesego.png', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
-                {'image_file': 'Prince.jpg', 'name': 'Prince Kala', 'contact_info': 'kala33prince@gmail.com', 'role': 'Machine Learning Engineer'},
-                {'image_file': 'Mpho.jpg', 'name': 'Mpho Sesinyi', 'contact_info': 'mphoses@hotmail.com', 'role': 'Data Engineer'},
+                {'image_file': 'Bonani.JPG', 'name': 'Bonani Mkhari', 'contact_info': 'bonanimkhari@gmail.com', 'role': 'Team Lead'},
+                {'image_file': 'Mulalo.JPG', 'name': 'Mulalo Manthanda', 'contact_info': 'manthadamulalo@gmail.com', 'role': 'Project Manager'},
+                {'image_file': 'Lucie.JPG', 'name': 'Lucpah Nekati', 'contact_info': 'nekatilp@gmail.com', 'role': 'Software Developer'},
+                {'image_file': 'Lesego.PNG', 'name': 'Lesego Maponyane', 'contact_info': 'lesegomoraladi@gmail.com', 'role': 'Data Scientist'},
+                {'image_file': 'Prince.JPG', 'name': 'Prince Kala', 'contact_info': 'kala33prince@gmail.com', 'role': 'Machine Learning Engineer'},
+                {'image_file': 'Mpho.JPG', 'name': 'Mpho Sesinyi', 'contact_info': 'mphoses@hotmail.com', 'role': 'Data Engineer'},
             ]
 
             for member in the_team:
@@ -240,28 +229,22 @@ def main():
                 display_team_member(image_path, member['name'], member['contact_info'], member['role'])
 
 
-        if selected == "About the App":
-            st.subheader("LunaPix")
-            st.markdown(open('resources/pages/About_LunaPix.md').read())
-            st.markdown(open('resources/pages/LunaPix_key_features.md').read())
-            st.markdown(open('resources/pages/Why_LunaPix.md').read())
-            st.markdown(open('resources/pages/LunaPix_vision.md').read())
-
-
+        
 # -------------------------------------------------------------------
-    
+    # Build the EDA page
+            
     if page_selection == "Analysis":
         st.title("Exploratory Data Analysis")
         st.write("Behind the Scenes: Understanding Movie Preferences through EDA")
 
         selected =  option_menu(
-            menu_tile =  None,
-            options = ["Insights", "Movie Titles Overview"],
+            menu_title =  None,
+            options = ["Movie Insights", "Movie Titles Overview"],
             icons = ["database-fill-check", "film"], #https://icons.getbootstrap.com/
             orientation = "horizontal"
         )
 
-        if selected ==  "Insights":
+        if selected ==  "Movie Insights":
             st.title("Behind The Scenes")       
 
             if st.checkbox("Top 10 users by number of ratings"):
@@ -269,9 +252,9 @@ def main():
                 st.image("resources/visuals/topuser.png", use_column_width=True)
 
 
-            if st.checkbox("Top 20 movies viewed by users"):
-                st.title("Top 20 movies viewed by users")
-                st.image("resources/visuals/topviewed.png", use_column_width=True)
+        #    if st.checkbox("Top 20 movies viewed by users"):
+         #       st.title("Top 20 movies viewed by users")
+          #      st.image("resources/visuals/topviewed.png", use_column_width=True)
 
 
             if st.checkbox("Number of movies per director"):
@@ -279,29 +262,53 @@ def main():
                 st.image("resources/visuals/directormovies.png", use_column_width=True)
 
 
-            if st.checkbox("Top 10 Directors with Highest Rated Movies"):
-                st.title("Top 10 Directors with Highest Rated Movies")
-                st.image("resources/visuals/topdirectors.png", use_column_width=True)
+           # if st.checkbox("Top 10 Directors with Highest Rated Movies"):
+            #    st.title("Top 10 Directors with Highest Rated Movies")
+             #   st.image("resources/visuals/topdirectors.png", use_column_width=True)
 
-            if st.checkbox("Top 10 Directors with Worst Rated Movies"):
-                st.title("Top 10 Directors with Worst Rated Movies")
-                st.image("resources/visuals/worstdirectors.png", use_column_width=True)
-
-
-            if st.checkbox("Top 10 Highest Rated Movies"):
-                st.title("The Top 10 Highest Rated Movies")
-                st.image("resources/visuals/topmovies.png", use_column_width=True)
+         #   if st.checkbox("Top 10 Directors with Worst Rated Movies"):
+          #      st.title("Top 10 Directors with Worst Rated Movies")
+           #     st.image("resources/visuals/worstdirectors.png", use_column_width=True)
 
 
-            if st.checkbox("Top 10 Worst Rated Movies"):
-                st.title("The Top 10 Worst Rated Movies")
-                st.image("resources/visuals/worstmovies.png", use_column_width=True)
+           # if st.checkbox("Top 10 Highest Rated Movies"):
+            #    st.title("The Top 10 Highest Rated Movies")
+             #   st.image("resources/visuals/topmovies.png", use_column_width=True)
 
 
-            if st.checkbox("Most common genres"):
-                st.title("Most common genres")
-                st.image("resources/visuals/genres.png", use_column_width=True)
+          #  if st.checkbox("Top 10 Worst Rated Movies"):
+           #     st.title("The Top 10 Worst Rated Movies")
+            #    st.image("resources/visuals/worstmovies.png", use_column_width=True)
 
+
+        #    if st.checkbox("Most common genres"):
+         #       st.title("Most common genres")
+          #      st.image("resources/visuals/genres.png", use_column_width=True)
+                
+
+        if selected ==  "Movie Title Overviews":
+            st.title("Sneak Peek")
+
+
+# -------------------------------------------------------------------
+    # Build the Contact us page
+                
+    if page_selection == "Contact Us":
+        st.title("Contact Us")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Contact info")
+            st.write("123, Long Street")
+            st.write("Cape Town, 8001, South Africa")
+            st.write("Telephone:+27-21-456-7890")
+            st.write("Email: lunapix@stararclabz.com")
+
+        with col2:
+            st.subheader("Send Us")
+            email = st.text_input("Enter your email")
+            message = st.text_area("Enter your message")
+            st.button("Send")
             
     # You may want to add more sections here for aspects such as an EDA,
     # or to provide your business pitch.
