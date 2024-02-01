@@ -19,6 +19,25 @@ import pickle
 ratings = pd.read_csv('ratings.csv')
 ratings.drop('timestamp',axis=1,inplace=True)
 
+# Reconstruct model
+# Create a list of split parts
+split_parts = ['svd_model_af', 'svd_model_am', 'svd_model_at', 'svd_model_ba',
+                'svd_model_ag', 'svd_model_an', 'svd_model_au', 'svd_model_bb',
+                'svd_model_aa',  'svd_model_ah', 'svd_model_ao', 'svd_model_av', 'svd_model_bc',
+                'svd_model_ab',  'svd_model_ai', 'svd_model_ap', 'svd_model_aw', 'svd_model_bd',
+                'svd_model_ac', 'svd_model_aj', 'svd_model_aq', 'svd_model_ax', 'svd_model_be',
+                'svd_model_ad', 'svd_model_ak', 'svd_model_ar', 'svd_model_ay', 'svd_model_bf',
+                'svd_model_ae', 'svd_model_al', 'svd_model_as', 'svd_model_az']
+
+# Specify the output path for the reconstructed model
+output_path = 'svd_model.pkl'
+
+# Combine split parts into the reconstructed model
+with open(output_path, 'wb') as output_file:
+    for part in split_parts:
+        with open(part, 'rb') as input_file:
+            output_file.write(input_file.read())
+
 def svd_pp(save_path):
     # Check the range of the rating
     min_rat = ratings['rating'].min()
