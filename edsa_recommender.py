@@ -309,6 +309,14 @@ def main():
             email = st.text_input("Enter your email")
             message = st.text_area("Enter your message")
             st.button("Send")
+
+ # -------------------------------------------------------------------
+    # Build the Terms and Conditions page
+    if page_selection == "Terms and Conditions":
+        st.title("Terms and Conditions")
+        st.title("Streamlit Terms and Conditions")
+        st.markdown(open('resources/TandC.md', encoding='utf-8').read())
+
             
     # You may want to add more sections here for aspects such as an EDA,
     # or to provide your business pitch.
