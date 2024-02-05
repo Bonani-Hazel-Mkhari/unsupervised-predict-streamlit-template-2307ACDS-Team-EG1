@@ -30,6 +30,7 @@
 # Script dependencies
 import pandas as pd
 import numpy as np
+import scipy as sp
 import pickle
 import copy
 from surprise import Reader, Dataset
@@ -117,32 +118,63 @@ def collab_model(movie_list,top_n=10):
         Titles of the top-n movie recommendations to the user.
 
     """
-
+    names = movies_df.copy()
+    names.set_index('moviedId', inplace=True)
     indices = pd.Series(movies_df['title'])
+    user_ids = pred_movies(movie_list)
     movie_ids = pred_movies(movie_list)
+    # Get movie IDs and ratings for top users
     df_init_users = ratings_df[ratings_df['userId']==movie_ids[0]]
-    for i in movie_ids :
-        df_init_users=df_init_users.append(ratings_df[ratings_df['userId']==i])
-    # Getting the cosine similarity matrix
-    cosine_sim = cosine_similarity(np.array(df_init_users), np.array(df_init_users))
+    for i in user_ids[1:]:
+        df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
+    # Predictions for selected movies
+    for j in movie_list:
+        pred = pd.DataFrame(prediction_item(j))
+        for i in set(df_init_users['userId']):
+            mid = indices[indices == j].index[0]
+            est = pred['est'][pred['uid']==i].values[0]
+            df_init_users = df_init_users.append(pd.Series([int(i), int(mid), set], index=['userId', 'movieId', 'rating']), ignore_index=True)
+    # Remove duplicates
+    df_init_users.drop_duplicates(inplace=True)
+    # Create pivot table
+    utility_matrix = df_init_users.pivot_table(index=['userId'], columns=['movieId'], values='rating')
+    # Fill missing vales with 0
+    utility_matrix.fillna(0, inplace=True)
+    # Save utilility_matrix in sparse matrix format
+    utility_matrix_sparse = sp.sparce.csr_matrix(utility_matrix.values)
+    # Calculate cosine similarity using utility_matix_sparse
+    similar_users = cosine_similarity(utility_matrix_sparse.T)
+    # Save cosimilarity of similar_users as DataFrame
+    similar_users_df = pd.DataFrame(similar_users, index=utility_matrix.columns, columns=utility_matrix.columns)
+    similar_users = cosine_similarity(np.array(df_init_users), np.array(df_init_users))
+    similar_users_df = pd.DataFrame(similar_users, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
+    # Remove duplicates
+    similar_users_df = similar_users_df[~similar_users_df.index.duplicated(keep='first')]
+    # Transpose similar_users_df
+    similar_users_df = similar_users_df.T
+    # Extract IDs of seleted movies titles
     idx_1 = indices[indices == movie_list[0]].index[0]
     idx_2 = indices[indices == movie_list[1]].index[0]
     idx_3 = indices[indices == movie_list[2]].index[0]
     # Creating a Series with the similarity scores in descending order
-    rank_1 = cosine_sim[idx_1]
-    rank_2 = cosine_sim[idx_2]
-    rank_3 = cosine_sim[idx_3]
+    rank_1 = similar_users_df[idx_1]
+    rank_2 = similar_users_df[idx_2]
+    rank_3 = similar_users_df[idx_3]
     # Calculating the scores
     score_series_1 = pd.Series(rank_1).sort_values(ascending = False)
     score_series_2 = pd.Series(rank_2).sort_values(ascending = False)
     score_series_3 = pd.Series(rank_3).sort_values(ascending = False)
      # Appending the names of movies
-    listings = score_series_1.append(score_series_1).append(score_series_3).sort_values(ascending = False)
+    listings = score_series_1.append(score_series_2).append(score_series_3).sort_values(ascending = False)
     recommended_movies = []
     # Choose top 50
     top_50_indexes = list(listings.iloc[1:50].index)
     # Removing chosen movies
     top_indexes = np.setdiff1d(top_50_indexes,[idx_1,idx_2,idx_3])
+    # Extract titles of recommended movies
     for i in top_indexes[:top_n]:
-        recommended_movies.append(list(movies_df['title'])[i])
+        recommended_movies.append(list(movies_df[movies_df['movieId']==i]['title']))
+    
+    # Return recommended movies
+    recommended_movies = [movie for sublist in recommended_movies for movie in sublist]
     return recommended_movies
