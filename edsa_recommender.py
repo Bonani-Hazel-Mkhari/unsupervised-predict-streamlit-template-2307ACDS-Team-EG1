@@ -172,12 +172,21 @@ def main():
         st.title("Solution Overview")
         st.write("What makes LunaPix unique")
         st.subheader("LunaPix")
+        
+        # Create a row for images of LunaPix features
+        col1, col2, col3 = st.columns(3)
+
+        # Display three images in the same row
+        col1.image('resources/imgs/Account.png', caption='Account Management', width =300)
+        col2.image('resources/imgs/Algorithm.png', caption='Dual Recommender System', width = 300)
+        col3.image('resources/imgs/Analysis.png', caption='User Centric Design', width = 300)
+        
         st.markdown(open('resources/pages/About_LunaPix.md').read())
         st.markdown(open('resources/pages/LunaPix_key_features.md').read())
         st.markdown(open('resources/pages/Why_LunaPix.md').read())
         st.markdown(open('resources/pages/LunaPix_vision.md').read())
 
-
+    # -------------------------------------------------------------------
     # Build the About Us Page 
     if page_selection == "About Us":
         st.title("Abous Us")
@@ -192,6 +201,7 @@ def main():
 
         if selected == "Star-Arc Labz":
             st.subheader("Star-Arc Labz")
+            st.image('resources/imgs/background.jpg', use_column_width=True)
             st.markdown(open('resources/pages/Who_we_are.md').read())
             st.markdown(open('resources/pages/Mission_statement.md').read())
             st.markdown(open('resources/pages/Vision.md').read())
@@ -239,7 +249,7 @@ def main():
 
         selected =  option_menu(
             menu_title =  None,
-            options = ["Movie Insights", "Movie Titles Overview"],
+            options = ["Movie Insights"],
             icons = ["database-fill-check", "film"], #https://icons.getbootstrap.com/
             orientation = "horizontal"
         )
@@ -286,10 +296,7 @@ def main():
           #      st.image("resources/visuals/genres.png", use_column_width=True)
                 
 
-        if selected ==  "Movie Title Overviews":
-            st.title("Sneak Peek")
-
-
+        
 # -------------------------------------------------------------------
     # Build the Contact us page
                 
@@ -315,7 +322,7 @@ def main():
     if page_selection == "Terms and Conditions":
         st.title("Terms and Conditions")
         st.title("Streamlit Terms and Conditions")
-        st.markdown(open('resources/TandC.md', encoding='utf-8').read())
+        st.markdown(open('resources/pages/TandC.md', encoding='utf-8').read())
 
             
     # You may want to add more sections here for aspects such as an EDA,
