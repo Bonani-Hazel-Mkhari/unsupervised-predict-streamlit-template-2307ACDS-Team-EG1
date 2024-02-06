@@ -33,8 +33,7 @@ import numpy as np
 import scipy as sp
 import pickle
 import copy
-from surprise import Reader, Dataset
-from surprise import SVD, NormalPredictor, BaselineOnly, KNNBasic, NMF
+from surprise import Reader, Dataset, SVD
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -43,8 +42,12 @@ movies_df = pd.read_csv('resources/data/movies.csv',sep = ',')
 ratings_df = pd.read_csv('resources/data/ratings.csv')
 ratings_df.drop(['timestamp'], axis=1,inplace=True)
 
-# We make use of an SVD model trained on a subset of the MovieLens 10k dataset.
-model=pickle.load(open('resources/models/SVD.pkl', 'rb'))
+# We make use of an SVD model trained on a subset of the MovieLens dataset.
+model_file_path = 'resources/models/SVD.pkl'
+# Open the pickled model file in binary read mode
+with open(model_file_path, 'rb') as file:
+    # Load the pickled model
+    model = pickle.load(file)
 
 def prediction_item(item_id):
     """Map a given favourite movie to users within the
@@ -134,6 +137,7 @@ def collab_model(movie_list,top_n=10):
             mid = indices[indices == j].index[0]
             est = pred['est'][pred['uid']==i].values[0]
             df_init_users = df_init_users.append(pd.Series([int(i), int(mid), set], index=['userId', 'movieId', 'rating']), ignore_index=True)
+    
     # Remove duplicates
     df_init_users.drop_duplicates(inplace=True)
     # Create pivot table
