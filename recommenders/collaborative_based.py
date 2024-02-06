@@ -147,23 +147,23 @@ def collab_model(movie_list,top_n=10):
     # Save util_matrix in sparse matrix format
     util_matrix_sparse = sp.sparse.csr_matrix(util_matrix.values)
     # Calculate cosine similarity using util_matix_sparse
-    similar_users = cosine_similarity(util_matrix_sparse.T)
+    user_similarity = cosine_similarity(util_matrix_sparse.T)
     # Save cosimilarity of similar_users as DataFrame
-    similar_users_df = pd.DataFrame(similar_users, index=util_matrix.columns, columns=util_matrix.columns)
-    similar_users = cosine_similarity(np.array(df_init_users), np.array(df_init_users))
-    similar_users_df = pd.DataFrame(similar_users, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
+    user_sim_df = pd.DataFrame(similar_users, index=util_matrix.columns, columns=util_matrix.columns)
+    user_similarity = cosine_similarity(np.array(df_init_users), np.array(df_init_users))
+    user_sim_df = pd.DataFrame(user_similarity, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
     # Remove duplicates
-    similar_users_df = similar_users_df[~similar_users_df.index.duplicated(keep='first')]
+    user_sim_df = user_sim_df[~user_sim_df.index.duplicated(keep='first')]
     # Transpose similar_users_df
-    similar_users_df = similar_users_df.T
+    user_sim_df = user_sim_df.T
     # Extract IDs of selected movies titles
     idx_1 = indices[indices == movie_list[0]].index[0]
     idx_2 = indices[indices == movie_list[1]].index[0]
     idx_3 = indices[indices == movie_list[2]].index[0]
     # Creating a Series with the similarity scores in descending order
-    rank_1 = similar_users_df[idx_1]
-    rank_2 = similar_users_df[idx_2]
-    rank_3 = similar_users_df[idx_3]
+    rank_1 = user_sim_df[idx_1]
+    rank_2 = user_sim_df[idx_2]
+    rank_3 = user_sim_df[idx_3]
     # Calculating the scores
     score_series_1 = pd.Series(rank_1).sort_values(ascending = False)
     score_series_2 = pd.Series(rank_2).sort_values(ascending = False)
