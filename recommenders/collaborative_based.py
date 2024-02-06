@@ -141,15 +141,15 @@ def collab_model(movie_list,top_n=10):
     # Remove duplicates
     df_init_users.drop_duplicates(inplace=True)
     # Create pivot table
-    utility_matrix = df_init_users.pivot_table(index=['userId'], columns=['movieId'], values='rating')
+    util_matrix = df_init_users.pivot_table(index=['userId'], columns=['movieId'], values='rating')
     # Fill missing values with 0
-    utility_matrix.fillna(0, inplace=True)
-    # Save utility_matrix in sparse matrix format
-    utility_matrix_sparse = sp.sparse.csr_matrix(utility_matrix.values)
-    # Calculate cosine similarity using utility_matix_sparse
-    similar_users = cosine_similarity(utility_matrix_sparse.T)
+    util_matrix.fillna(0, inplace=True)
+    # Save util_matrix in sparse matrix format
+    util_matrix_sparse = sp.sparse.csr_matrix(util_matrix.values)
+    # Calculate cosine similarity using util_matix_sparse
+    similar_users = cosine_similarity(util_matrix_sparse.T)
     # Save cosimilarity of similar_users as DataFrame
-    similar_users_df = pd.DataFrame(similar_users, index=utility_matrix.columns, columns=utility_matrix.columns)
+    similar_users_df = pd.DataFrame(similar_users, index=util_matrix.columns, columns=util_matrix.columns)
     similar_users = cosine_similarity(np.array(df_init_users), np.array(df_init_users))
     similar_users_df = pd.DataFrame(similar_users, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
     # Remove duplicates
