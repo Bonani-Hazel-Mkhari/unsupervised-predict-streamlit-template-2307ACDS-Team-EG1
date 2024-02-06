@@ -125,9 +125,9 @@ def collab_model(movie_list,top_n=10):
     names.set_index('moviedId', inplace=True)
     indices = pd.Series(movies_df['title'])
     user_ids = pred_movies(movie_list)
-    movie_ids = pred_movies(movie_list)
+    
     # Get movie IDs and ratings for top users
-    df_init_users = ratings_df[ratings_df['userId']==movie_ids[0]]
+    df_init_users = ratings_df[ratings_df['userId']==user_ids[0]]
     for i in user_ids[1:]:
         df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
     # Predictions for selected movies
@@ -145,7 +145,7 @@ def collab_model(movie_list,top_n=10):
     # Fill missing vales with 0
     utility_matrix.fillna(0, inplace=True)
     # Save utilility_matrix in sparse matrix format
-    utility_matrix_sparse = sp.sparce.csr_matrix(utility_matrix.values)
+    utility_matrix_sparse = sp.sparse.csr_matrix(utility_matrix.values)
     # Calculate cosine similarity using utility_matix_sparse
     similar_users = cosine_similarity(utility_matrix_sparse.T)
     # Save cosimilarity of similar_users as DataFrame
@@ -156,7 +156,7 @@ def collab_model(movie_list,top_n=10):
     similar_users_df = similar_users_df[~similar_users_df.index.duplicated(keep='first')]
     # Transpose similar_users_df
     similar_users_df = similar_users_df.T
-    # Extract IDs of seleted movies titles
+    # Extract IDs of selected movies titles
     idx_1 = indices[indices == movie_list[0]].index[0]
     idx_2 = indices[indices == movie_list[1]].index[0]
     idx_3 = indices[indices == movie_list[2]].index[0]
