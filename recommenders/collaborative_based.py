@@ -170,6 +170,8 @@ def collab_model(movie_list,top_n=10):
     score_series_3 = pd.Series(rank_3).sort_values(ascending = False)
      # Appending the names of movies
     listings = score_series_1.append(score_series_2).append(score_series_3).sort_values(ascending = False)
+    
+    # Store movies
     recommended_movies = []
     # Choose top 50
     top_50_indexes = list(listings.iloc[1:50].index)
