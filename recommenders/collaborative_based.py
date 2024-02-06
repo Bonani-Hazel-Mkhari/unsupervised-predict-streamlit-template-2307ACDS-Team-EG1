@@ -132,19 +132,19 @@ def collab_model(movie_list,top_n=10):
         df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
     # Predictions for selected movies
     for j in movie_list:
-        pred = pd.DataFrame(prediction_item(j))
+        a = pd.DataFrame(prediction_item(j))
         for i in set(df_init_users['userId']):
             mid = indices[indices == j].index[0]
-            est = pred['est'][pred['uid']==i].values[0]
-            df_init_users = df_init_users.append(pd.Series([int(i), int(mid), set], index=['userId', 'movieId', 'rating']), ignore_index=True)
+            est = a['est'][a['uid']==i].values[0]
+            df_init_users = df_init_users.append(pd.Series([int(i), int(mid), est], index=['userId', 'movieId', 'rating']), ignore_index=True)
     
     # Remove duplicates
     df_init_users.drop_duplicates(inplace=True)
     # Create pivot table
     utility_matrix = df_init_users.pivot_table(index=['userId'], columns=['movieId'], values='rating')
-    # Fill missing vales with 0
+    # Fill missing values with 0
     utility_matrix.fillna(0, inplace=True)
-    # Save utilility_matrix in sparse matrix format
+    # Save utility_matrix in sparse matrix format
     utility_matrix_sparse = sp.sparse.csr_matrix(utility_matrix.values)
     # Calculate cosine similarity using utility_matix_sparse
     similar_users = cosine_similarity(utility_matrix_sparse.T)
