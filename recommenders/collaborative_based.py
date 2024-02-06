@@ -127,12 +127,12 @@ def collab_model(movie_list,top_n=10):
     for i in user_ids[1:]:
         df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
     # Predictions for selected movies
-    #for j in movie_list:
-     #   a = pd.DataFrame(prediction_item(j))
-      #  for i in set(df_init_users['userId']):
-       #     mid = indices[indices == j].index[0]
-        #    est = a['est'][a['uid']==i].values[0]
-         #   df_init_users = df_init_users.append(pd.Series([int(i), int(mid), est], index=['userId', 'movieId', 'rating']), ignore_index=True)
+    for j in movie_list:
+        a = pd.DataFrame(prediction_item(j))
+        for i in set(df_init_users['userId']):
+            mid = indices[indices == j].index[0]
+            est = a['est'][a['uid']==i].values[0]
+            df_init_users = df_init_users.append(pd.Series([int(i), int(mid), est], index=['userId', 'movieId', 'rating']), ignore_index=True)
     
     # Remove duplicates
     df_init_users.drop_duplicates(inplace=True)
