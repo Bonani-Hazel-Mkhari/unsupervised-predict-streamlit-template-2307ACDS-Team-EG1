@@ -28,7 +28,7 @@ def svd_pp(save_path):
     # Loading the data frame using surprise
     data_load = surprise.Dataset.load_from_df(ratings, reader)
     # Instantiating surprise
-    method = SVD(n_factors = 300 , verbose=True, n_epochs = 30 , init_std_dev = 0.05, random_state=42)
+    method = SVD(n_factors = 300 , verbose=True, n_epochs = 30 , init_std_dev = 0.005, random_state=42)
     # Loading a trainset into the model
     model = method.fit(data_load.build_full_trainset())
     print (f"Training completed. Saving model to: {save_path}")
