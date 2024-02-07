@@ -38,12 +38,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Importing data
-movies_df = pd.read_csv('resources/data/movies.csv',sep = ',')
+# movies_df = pd.read_csv('resources/data/movies.csv',sep = ',')
+movies_df = pd.read_csv('resources/data/movies.csv')
 ratings_df = pd.read_csv('resources/data/ratings.csv')
 ratings_df.drop(['timestamp'], axis=1,inplace=True)
 
 # We make use of an SVD model trained on a subset of the MovieLens dataset.
-model=pickle.load(open('resources/models/SVD.pkl', 'rb'))
+model = pickle.load(open('resources/models/SVD.pkl', 'rb'))
 
 def prediction_item(item_id):
     """Map a given favourite movie to users within the
@@ -138,7 +139,7 @@ def collab_model(movie_list,top_n=10):
     df_init_users.drop_duplicates(inplace=True)
     
     # Create pivot table
-    util_matrix = df_init_users.pivot_table(index=['userId'], columns=['movieId'], values='rating')
+    util_matrix = df_init_users.pivot_table(index='userId', columns='movieId', values='rating')
     
     # Fill missing values with 0
     util_matrix.fillna(0, inplace=True)
