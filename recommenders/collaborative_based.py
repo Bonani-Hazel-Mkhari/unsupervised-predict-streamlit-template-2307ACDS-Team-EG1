@@ -38,10 +38,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Importing data
-# movies_df = pd.read_csv('resources/data/movies.csv',sep = ',')
+# movies_df = pd.read_csv('resources/data/movies.csv', sep=',')
 movies_df = pd.read_csv('resources/data/movies.csv')
 ratings_df = pd.read_csv('resources/data/ratings.csv')
-ratings_df.drop(['timestamp'], axis=1,inplace=True)
+ratings_df.drop(['timestamp'], axis=1, inplace=True)
 
 # We make use of an SVD model trained on a subset of the MovieLens dataset.
 model = pickle.load(open('resources/models/SVD.pkl', 'rb'))
@@ -61,14 +61,14 @@ def prediction_item(item_id):
         User IDs of users with similar high ratings for the given movie.
 
     """
-    # Data preprosessing
+    # Data preprocessing
     reader = Reader(rating_scale=(0, 5))
-    load_df = Dataset.load_from_df(ratings_df,reader)
+    load_df = Dataset.load_from_df(ratings_df, reader)
     a_train = load_df.build_full_trainset()
 
     predictions = []
     for ui in a_train.all_users():
-        predictions.append(model.predict(iid=item_id,uid=ui, verbose = False))
+        predictions.append(model.predict(iid=item_id, uid=ui, verbose=False))
     return predictions
 
 def pred_movies(movie_list):
@@ -87,11 +87,11 @@ def pred_movies(movie_list):
 
     """
     # Store the id of users
-    id_store=[]
+    id_store = []
     # For each movie selected by a user of the app,
     # predict a corresponding user within the dataset with the highest rating
     for i in movie_list:
-        predictions = prediction_item(item_id = i)
+        predictions = prediction_item(item_id=i)
         predictions.sort(key=lambda x: x.est, reverse=True)
         # Take the top 10 user id's from each movie with highest rankings
         for pred in predictions[:10]:
@@ -100,8 +100,8 @@ def pred_movies(movie_list):
     return id_store
 
 # !! DO NOT CHANGE THIS FUNCTION SIGNATURE !!
-# You are, however, encouraged to change its content.  
-def collab_model(movie_list,top_n=10):
+# You are, however, encouraged to change its content.
+def collab_model(movie_list, top_n=10):
     """Performs Collaborative filtering based upon a list of movies supplied
        by the app user.
 
@@ -119,27 +119,27 @@ def collab_model(movie_list,top_n=10):
 
     """
     names = movies_df.copy()
-    names.set_index('moviedId', inplace=True)
+    names.set_index('movieId', inplace=True)  # Corrected typo here
     indices = pd.Series(names['title'])
     movie_ids = pred_movies(movie_list)
     
     # Get movie IDs and ratings for top users
-    df_init_users = ratings_df[ratings_df['userId']==movie_ids[0]]
+    df_init_users = ratings_df[ratings_df['userId'] == movie_ids[0]]
     for i in movie_ids[1:]:
-        df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
+        df_init_users = df_init_users.append(ratings_df[ratings_df['userId'] == i])
     # Predictions for selected movies
     for j in movie_list:
         a = pd.DataFrame(prediction_item(j))
         for i in set(df_init_users['userId']):
             mid = indices[indices == j].index[0]
-            est = a['est'][a['uid']==i].values[0]
+            est = a['est'][a['uid'] == i].values[0]
             df_init_users = df_init_users.append(pd.Series([int(i), int(mid), est], index=['userId', 'movieId', 'rating']), ignore_index=True)
     
     # Remove duplicates
     df_init_users.drop_duplicates(inplace=True)
     
     # Create pivot table
-    util_matrix = df_init_users.pivot_table(index='userId', columns='movieId', values='rating')
+    util_matrix = df_init_users.pivot_table(index='userId', columns='movieId', values='rating')  # Corrected typo here
     
     # Fill missing values with 0
     util_matrix.fillna(0, inplace=True)
@@ -154,7 +154,8 @@ def collab_model(movie_list,top_n=10):
     user_sim_df = pd.DataFrame(user_similarity, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
     
     # Remove duplicates
-    user_sim_df = user_sim_df.loc[~user_sim_df.index.duplicated(keep='first')]
+    user_sim_df = user_sim_df.loc[~user_sim_df.index.duplicated(keep='first')]  # Changed here to use .loc
+    
     # Transpose similar_users_df
     user_sim_df = user_sim_df.T
     
@@ -169,25 +170,25 @@ def collab_model(movie_list,top_n=10):
     rank_3 = user_sim_df[idx_3]
     
     # Calculating the scores
-    score_series_1 = pd.Series(rank_1).sort_values(ascending = False)
-    score_series_2 = pd.Series(rank_2).sort_values(ascending = False)
-    score_series_3 = pd.Series(rank_3).sort_values(ascending = False)
+    score_series_1 = pd.Series(rank_1).sort_values(ascending=False)
+    score_series_2 = pd.Series(rank_2).sort_values(ascending=False)
+    score_series_3 = pd.Series(rank_3).sort_values(ascending=False)
     
     # Appending the names of movies
-    listings = score_series_1.append(score_series_2).append(score_series_3).sort_values(ascending = False)
+    listings = score_series_1.append(score_series_2).append(score_series_3).sort_values(ascending=False)
       
     # Choose top 50
     top_50_indexes = list(listings.iloc[1:50].index)
     
     # Removing chosen movies
-    top_indexes = np.setdiff1d(top_50_indexes,[idx_1,idx_2,idx_3])
+    top_indexes = np.setdiff1d(top_50_indexes, [idx_1, idx_2, idx_3])
 
     # Store movies
     recommended_movies = []
     
     # Extract titles of recommended movies
     for i in top_indexes[:top_n]:
-        recommended_movies.append(list(movies_df[movies_df['movieId']==i]['title']))
+        recommended_movies.append(list(movies_df[movies_df['movieId'] == i]['title']))
     # Return recommended movies
     recommended_movies = [val for sublist in recommended_movies for val in sublist]
     return recommended_movies
