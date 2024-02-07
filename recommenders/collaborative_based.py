@@ -43,7 +43,7 @@ ratings_df = pd.read_csv('resources/data/ratings.csv')
 ratings_df.drop(['timestamp'], axis=1,inplace=True)
 
 # We make use of an SVD model trained on a subset of the MovieLens dataset.
-model=pickle.load(open('resources/models/SVD.pkl', 'rb'))
+model=pickle.load(open('resources/models/SVD1.pkl', 'rb'))
 
 def prediction_item(item_id):
     """Map a given favourite movie to users within the
@@ -119,12 +119,12 @@ def collab_model(movie_list,top_n=10):
     """
     names = movies_df.copy()
     names.set_index('moviedId', inplace=True)
-    indices = pd.Series(movies_df['title'])
+    indices = pd.Series(names['title'])
     movie_ids = pred_movies(movie_list)
     
     # Get movie IDs and ratings for top users
     df_init_users = ratings_df[ratings_df['userId']==movie_ids[0]]
-    for i in user_ids[1:]:
+    for i in movie_ids[1:]:
         df_init_users = df_init_users.append(ratings_df[ratings_df['userId']==i])
     # Predictions for selected movies
     for j in movie_list:
@@ -153,7 +153,7 @@ def collab_model(movie_list,top_n=10):
     user_sim_df = pd.DataFrame(user_similarity, index=df_init_users['movieId'].values.astype(int), columns=df_init_users['movieId'].values.astype(int))
     
     # Remove duplicates
-    user_sim_df = user_sim_df[~user_sim_df.index.duplicated(keep='first')]
+    user_sim_df = user_sim_df.loc[~user_sim_df.index.duplicated(keep='first')]
     # Transpose similar_users_df
     user_sim_df = user_sim_df.T
     
@@ -174,19 +174,19 @@ def collab_model(movie_list,top_n=10):
     
     # Appending the names of movies
     listings = score_series_1.append(score_series_2).append(score_series_3).sort_values(ascending = False)
-    
-    # Store movies
-    recommended_movies = []
-    
+      
     # Choose top 50
     top_50_indexes = list(listings.iloc[1:50].index)
     
     # Removing chosen movies
     top_indexes = np.setdiff1d(top_50_indexes,[idx_1,idx_2,idx_3])
+
+    # Store movies
+    recommended_movies = []
     
     # Extract titles of recommended movies
     for i in top_indexes[:top_n]:
-        recommended_movies.append(list(movies_df['title'])[i])
+        recommended_movies.append(list(movies_df[movies_df['movieId']==i]['title'])
     # Return recommended movies
     recommended_movies = [val for sublist in recommended_movies for val in sublist]
     return recommended_movies
